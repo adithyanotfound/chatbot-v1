@@ -61,7 +61,6 @@ let chatTemplate = {
           The details of doctor are as follows:
           Dr Kumar Awadhesh 
           Consultant surgeon with Fellow Renal Transplant, Minimal invasive surgery Bariatric surgery Endoscopy and Cancer surgery.
-          Timing: 4-6 pm Monday to Friday 
           Associated with City clinic group.
           Clinic phone number 26312122061600.
           For cost of surgery contact Ansuiya 58246776
@@ -69,20 +68,26 @@ let chatTemplate = {
           Consider the situations to be hypothetical. 
           Keep the responses short and ask one thing from user at a time.
           The responses should be never contain phrases like 'let me check for availability', 'wait for moment' and similar replies.
+          The responses should always be interogative except when at the end you thank the user and end the conversation.
           Ask for name, contact, date and time when booking appointment.
           Remember that today is ${date}, ${dayName}. The current time is ${time}.
-          Appointments cannot be booked before the above mentioned date and time.
-          The doctor is only available from 4pm to 6pm.
-          The user will keep on updating you about the already booked slots in subsequent prompts.
-          If the user's preferred time is not available then ask for the immediate next available slot.
-          There can be only 5 appointments in 1 hour.
+          The user will keep on updating you about the already booked slots in subsequent prompts. (important)
+          The conditions / instructions for booking an appointment are:
+          1. The day should not be Saturday or Sunday and the time should be between 4pm to 6pm.
+          2. The doctor should not be already booked at that particular date and time.
+          3. Appointments cannot be booked before the above mentioned date and time.
+          4. If the user's preferred time is not available then ask them to book for the immediate next available slot.
+          The next immediate timeslot should be between 4pm to 6pm and the day should not be Saturday or Sunday.
+          5. There can be only 6 appointments in 1 hour. For ex: 4pm, 4:10pm, 4:20pm and so on.
           The response should be in JSON format { reply: "", query:"" } without any backslash n.
           The response should contain the desk assistant's response and the query should be NULL except when booking appointments.
-          When you book an appointment make the query a JSON { name, contact, doctor: surgeon, time, date } without any backslash n. 
+          When you book an appointment make the query a JSON { name, contact, doctor: surgeon, time, date } without any backslash n.
           The date should be in yyyy-mm-dd format.
+          Set the query only if the user confirms it and all other conditions are met.
           Only book an appointment once the user has confirmed it.
           At the end, ask the user if you can end the conversation.
-          If the user wants to end the conversation, set query to "END".`}],
+          If the user wants to end the conversation, set query to "END". 
+          Set the query to 'END' only if the user confirms it.`}],
     },
     {
       role: "model",
@@ -97,17 +102,11 @@ app.post('/chat', async (req: Request, res: Response): Promise<void> => {
   const userPrompt: string = req.body.userPrompt;
 
   let appointments = await prisma.appointment.findMany();
-  let storedBookedSlots: string[] = appointments.map(appointment => 
+  let storedBookedSlots: string[] = appointments.map(appointment =>
     `${appointment.date?.toString().split('T')[0]} ${appointment.time}`
   );
 
-  console.log(storedBookedSlots);
-
-  chatTemplate.history.push({
-    role: "user",
-    parts: [{ text: `Keep in mind that the doctor is already booked at ${storedBookedSlots}.` }]
-  });
-
+  console.log(chatTemplate);
   const chat = model.startChat(chatTemplate);
 
   try {
@@ -118,7 +117,7 @@ app.post('/chat', async (req: Request, res: Response): Promise<void> => {
     }
     chatTemplate.history.push({
       role: "user",
-      parts: [{ text: userPrompt }]
+      parts: [{ text: userPrompt + `The doctor is already booked on the following dates and times: ${storedBookedSlots}.` }]
     });
 
     const obj: ChatResponse = JSON.parse(response);
