@@ -96,7 +96,7 @@ let chatTemplate = {
   ],
 }
 
-const chatTemplateUnmodified = { ...chatTemplate };
+const chatTemplateUnmodified = JSON.parse(JSON.stringify(chatTemplate));;
 
 app.post('/chat', async (req: Request, res: Response): Promise<void> => {
   const userPrompt: string = req.body.userPrompt;
@@ -125,7 +125,7 @@ app.post('/chat', async (req: Request, res: Response): Promise<void> => {
     //@ts-ignore
     //The comparison is intentional.
     if (obj.query === 'END') {
-      chatTemplate = { ...chatTemplateUnmodified }; //still doesn't clear
+      chatTemplate = JSON.parse(JSON.stringify(chatTemplateUnmodified)); //still doesn't clear
     }
     else if (obj.query != null) {
       try {
