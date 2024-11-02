@@ -18,7 +18,7 @@ model Appointment {
   name      String?
   contact   String?
   doctor    String?
-  date      DateTime?
+  date      String?
   time      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

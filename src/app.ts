@@ -6,7 +6,6 @@ import { PrismaClient } from '@prisma/client';
 
 //Issues
 //1. Doesn't clear chat ig
-//2. Push data to database
 //3. Structure routes into api/v1
 //4. Create routes for admin stuff (maybe use next.js admin login)
 
@@ -99,8 +98,10 @@ app.post('/chat', async (req: Request, res: Response): Promise<void> => {
 
   let appointments = await prisma.appointment.findMany();
   let storedBookedSlots: string[] = appointments.map(appointment => 
-    `${appointment.date?.toISOString().split('T')[0]} ${appointment.time}`
+    `${appointment.date?.toString().split('T')[0]} ${appointment.time}`
   );
+
+  console.log(storedBookedSlots);
 
   chatTemplate.history.push({
     role: "user",
@@ -134,8 +135,7 @@ app.post('/chat', async (req: Request, res: Response): Promise<void> => {
             name: obj.query.name,
             contact: obj.query.contact,
             doctor: obj.query.doctor,
-            //fix date format
-            date: new Date(obj.query.date),
+            date: obj.query.date,
             time: obj.query.time,
           },
         });
