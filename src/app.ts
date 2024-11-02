@@ -106,7 +106,7 @@ app.post('/chat', async (req: Request, res: Response): Promise<void> => {
     `${appointment.date?.toString().split('T')[0]} ${appointment.time}`
   );
 
-  console.log(chatTemplate);
+  // console.log(chatTemplate);
   const chat = model.startChat(chatTemplate);
 
   try {
