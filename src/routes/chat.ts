@@ -4,6 +4,7 @@ import { GoogleGenerativeAI, GenerativeModel } from "@google/generative-ai";
 import { PrismaClient } from '@prisma/client';
 
 //Issues
+//1. Add support for multiple users (sessions)
 //4. Create routes for admin stuff (maybe use next.js admin login) and add auth
 
 dotenv.config();
