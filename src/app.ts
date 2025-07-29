@@ -2,6 +2,8 @@ import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import { PrismaClient } from '@prisma/client';
 import chatRouter from './routes/chat'
+import adminRouter from './routes/admin'
+import authRouter from './routes/auth'
 
 
 const app = express();
@@ -15,6 +17,8 @@ const port = 3001;
 
 // middlewares
 app.use('/api/v1', chatRouter)
+app.use('/api/v1/admin', adminRouter)
+app.use('/api/v1', authRouter)
 
 // global catch
 app.use('/', (err: Error, req: Request, res: Response, next: NextFunction) => {

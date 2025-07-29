@@ -4,14 +4,39 @@ import { GoogleGenerativeAI, GenerativeModel } from "@google/generative-ai";
 import { PrismaClient } from '@prisma/client';
 import instructions from '../utils/instructions';
 
-//Issues
-//1. Add support for multiple users (sessions)
-//4. Create routes for admin stuff (maybe use next.js admin login) and add auth
-
 dotenv.config();
 
 const router = express.Router();
 const prisma = new PrismaClient();
+
+// New endpoints for booking, rescheduling, and FAQs
+router.post('/book-appointment', async (req: Request, res: Response) => {
+  const { name, contact, date, time } = req.body;
+  // Validate and create appointment logic here
+});
+
+router.post('/reschedule-appointment', async (req: Request, res: Response) => {
+  const { appointmentId, newDate, newTime } = req.body;
+  // Validate and reschedule logic here
+});
+
+router.post('/cancel-appointment', async (req: Request, res: Response) => {
+  const { appointmentId } = req.body;
+  // Validate and cancel logic here
+});
+
+router.get('/faqs', (req: Request, res: Response) => {
+  // Return FAQ details here
+  res.json({
+    faqs: [
+    ]
+  });
+});
+
+router.post('/otp-auth', (req: Request, res: Response) => {
+  const { phone, otp } = req.body;
+  // OTP validation logic here
+});
 
 // date and time
 const currentDate = new Date();

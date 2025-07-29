@@ -20,8 +20,31 @@ model Appointment {
   doctor    String?
   date      String?
   time      String?
+  status    String?  @default("active") // active, cancelled, completed
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("appointments")
+}
+
+model PatientAuth {
+  id        String   @id @default(uuid())
+  phone     String   @unique
+  otp       String?
+  otpExpiry DateTime?
+  verified  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("patient_auth")
+}
+
+model Conversation {
+  id        String   @id @default(uuid())
+  sessionId String?
+  userMessage String?
+  botResponse String?
+  createdAt DateTime @default(now())
+
+  @@map("conversations")
 }
