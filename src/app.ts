@@ -13,12 +13,21 @@ app.use(express.json());
 // express
 const port = 3001;
 
+// middlewares
 app.use('/api/v1', chatRouter)
 
+// global catch
 app.use('/', (err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(`Error: ${err}`);
   res.status(500).send("An internal error occurred.");
 });
+
+// health
+app.get('/health', (req: Request, res: Response) => {
+  res.json({
+    status: 'OK'
+  })
+})
 
 const startServer = async () => {
   try {

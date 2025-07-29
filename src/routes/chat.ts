@@ -29,7 +29,7 @@ const dayName = daysOfWeek[dayNumber];
 
 // gemini config
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY as string);
-const model: GenerativeModel = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+const model: GenerativeModel = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
 interface ChatResponse {
   reply: string;
